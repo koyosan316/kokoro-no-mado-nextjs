@@ -18,18 +18,24 @@ type Hotline = {
 
 type ScoredHotline = Hotline & { score: number };
 
+/* -------------------------
+   日本語テキスト正規化
+-------------------------- */
 function normalizeJa(raw: string): string {
   if (!raw) return "";
   let text = raw.toLowerCase();
 
+  // 全角→半角
   text = text.replace(/[！-～]/g, (ch) =>
     String.fromCharCode(ch.charCodeAt(0) - 0xfee0)
   );
 
+  // カタカナ→ひらがな
   text = text.replace(/[\u30a1-\u30f6]/g, (c) =>
     String.fromCharCode(c.charCodeAt(0) - 0x60)
   );
 
+  // 小書き文字を通常に
   const smallMap: Record<string, string> = {
     "ぁ": "あ",
     "ぃ": "い",
@@ -43,12 +49,18 @@ function normalizeJa(raw: string): string {
   };
   text = text.replace(/[ぁぃぅぇぉゃゅょっ]/g, (c) => smallMap[c] ?? c);
 
+  // 伸ばし棒を削る
   text = text.replace(/ー/g, "");
+
+  // 余計な空白まとめ
   text = text.replace(/\s+/g, " ").trim();
 
   return text;
 }
 
+/* -------------------------
+   相談窓口データ
+-------------------------- */
 const HOTLINES: Hotline[] = [
   {
     id: "sos-24h",
@@ -157,6 +169,9 @@ const HOTLINES: Hotline[] = [
   },
 ];
 
+/* -------------------------
+   スコアリング関数
+-------------------------- */
 function scoreHotlines(
   input: string
 ): { results: ScoredHotline[]; hasEmergencySignal: boolean } {
@@ -336,6 +351,9 @@ function scoreHotlines(
   return { results, hasEmergencySignal };
 }
 
+/* -------------------------
+   中身（useSearchParams を使う）
+-------------------------- */
 function SupportSearchInner() {
   const searchParams = useSearchParams();
   const initial = searchParams.get("text") ?? "";
@@ -348,7 +366,7 @@ function SupportSearchInner() {
 
   const trimmed = text.trim();
 
-  // ✅ ここが重要：バッククォート
+  // ✅ ここが超重要：必ず文字列（バッククォート）にする
   const googleUrl =
     trimmed.length > 0
       ? `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`
@@ -362,43 +380,339 @@ function SupportSearchInner() {
     setHasSearched(true);
   };
 
-  // ここから下のJSXは、君の元の超長いreturnをそのまま貼ってOK
-  // （ただし tel: と key のテンプレ文字列だけは上の修正どおりに）
+  const topResults = results ? results.slice(0, 3) : [];
+
   return (
-    <main className="p-6">
-      <Link href="/" className="underline">
-        ← ホームにもどる
-      </Link>
+    <main className="relative min-h-screen overflow-hidden bg-transparent text-slate-900">
+      {/* 背景の光 */}
+      <div className="pointer-events-none absolute inset-x-0 -top-40 h-72 bg-gradient-to-b from-sky-100/80 via-slate-50 to-transparent blur-3xl" />
+      <div className="pointer-events-none absolute -right-40 top-40 h-72 w-72 rounded-full bg-emerald-100/60 blur-3xl" />
+      <div className="pointer-events-none absolute -left-40 bottom-0 h-72 w-72 rounded-full bg-sky-100/50 blur-3xl" />
 
-      <div className="mt-4">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={4}
-          className="w-full border p-2"
-        />
-        <div className="mt-2 flex gap-2">
-          <button onClick={handleAnalyze} className="border px-3 py-1">
-            相談先の候補を表示する
-          </button>
+      <div className="relative mx-auto max-w-5xl px-4 py-8 fade-in">
+        {/* ヘッダー */}
+        <header className="flex items-center justify-between border-b border-slate-200 pb-4">
+          <Link
+            href="/"
+            className="rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50"
+          >
+            ← ホームにもどる
+          </Link>
+          <p className="text-xs text-slate-400">相談窓口をさがす</p>
+        </header>
 
-          {googleUrl && (
-            <a href={googleUrl} target="_blank" rel="noreferrer" className="underline">
-              入力した言葉でGoogle検索
-            </a>
-          )}
-        </div>
+        {/* タイトル＋注意書き */}
+        <section className="mt-6 space-y-3">
+          <h1 className="text-xl font-bold md:text-2xl">
+            いまの状況から相談窓口をさがす
+          </h1>
+          <p className="text-sm text-slate-700">
+            いじめ・人間関係・家庭のこと・こころの不調などについて、
+            「いまの状況」や「気持ち」を一文で書くと、
+            相談先として合いそうな窓口をアプリ内で提案します。
+          </p>
+          <div className="space-y-1 rounded-xl border border-amber-200 bg-amber-50/80 p-3">
+            <p className="text-xs font-semibold text-amber-900">
+              ⚠ 緊急の危険があるとき
+            </p>
+            <p className="text-[11px] text-amber-900/90">
+              いのちや安全に関わる緊急の状況では、
+              110番や119番などの緊急通報サービスの利用が最優先になります。
+              このサイトの情報は、診断や緊急対応の代わりにはなりません。
+            </p>
+          </div>
+        </section>
 
-        {hasSearched && results && (
-          <pre className="mt-4 whitespace-pre-wrap">
-            {JSON.stringify(results.slice(0, 3), null, 2)}
-          </pre>
-        )}
+        {/* 入力フォーム */}
+        <section className="mt-6 space-y-4">
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm">
+            <label className="block text-xs font-medium text-slate-600">
+              いまの状況や気持ちを、一文でも短い言葉でもいいので書いてください。
+            </label>
+            <p className="mt-1 text-[11px] text-slate-500">
+              例）「親に毎日怒鳴られていてつらい」
+              「いじめか分からないけどクラスで浮いている気がする」
+              「SNSで晒されていて怖い」 など
+            </p>
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              rows={4}
+              className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-sm outline-none ring-sky-100 focus:border-sky-400 focus:ring"
+              placeholder="思いつく範囲で、てきとうで大丈夫です。"
+            />
+
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={handleAnalyze}
+                className="rounded-full bg-sky-600 px-4 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-sky-700 disabled:opacity-60"
+                disabled={trimmed.length === 0}
+              >
+                相談先の候補を表示する
+              </button>
+
+              {googleUrl && (
+                <a
+                  href={googleUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[11px] text-slate-500 underline underline-offset-2 hover:text-slate-700"
+                >
+                  入力した言葉でGoogle検索結果も見てみる
+                </a>
+              )}
+            </div>
+
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-violet-50 px-3 py-1.5">
+              <span className="text-[11px] text-violet-800">
+                言葉が出てこないときは
+              </span>
+              <Link
+                href="/form"
+                className="text-[11px] font-semibold text-violet-800 underline underline-offset-2"
+              >
+                悩みを整理するページ
+              </Link>
+              <span className="text-[11px] text-violet-800">
+                を使っても大丈夫です。
+              </span>
+            </div>
+          </div>
+
+          {/* 結果表示 */}
+          <div className="space-y-4">
+            {hasSearched && results && (
+              <>
+                {hasEmergencySignal && (
+                  <div className="rounded-2xl border border-rose-200 bg-rose-50/90 p-4">
+                    <p className="text-xs font-semibold text-rose-800">
+                      ⚠ とてもつらい気持ちのサインが含まれているようです
+                    </p>
+                    <p className="mt-1 text-[11px] text-rose-900/90">
+                      「死にたい」「消えたい」などの気持ちが続いているとき、
+                      一人で抱え続ける必要はありません。できれば信頼できる大人
+                      （家族・先生・スクールカウンセラーなど）や、
+                      24時間対応の相談窓口にもつながってみてください。
+                    </p>
+                  </div>
+                )}
+
+                <section className="space-y-2">
+                  <h2 className="text-xs font-semibold text-slate-700">
+                    いまの内容から、次の相談窓口が合いそうです
+                  </h2>
+                  <p className="text-[11px] text-slate-500">
+                    ここに出てこない窓口が合わない、という意味ではありません。
+                    「話しやすそう」「ここなら大丈夫そう」と感じるところを選んで大丈夫です。
+                  </p>
+
+                  <div className="space-y-3">
+                    {topResults.map((h) => (
+                      <article
+                        key={h.id}
+                        className="rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-sm"
+                      >
+                        <div className="flex flex-wrap items-baseline justify-between gap-2">
+                          <h3 className="text-sm font-semibold text-slate-900">
+                            {h.name}
+                          </h3>
+                          <div className="flex flex-wrap gap-1">
+                            {h.tags.map((t) => (
+                              <span
+                                key={t}
+                                className="rounded-full bg-slate-100 px-2 py-[2px] text-[10px] text-slate-600"
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <p className="mt-2 text-xs text-slate-700">
+                          {h.description}
+                        </p>
+
+                        <dl className="mt-3 space-y-1 text-[11px] text-slate-600">
+                          {h.phone && (
+                            <div className="flex gap-2">
+                              <dt className="w-16 shrink-0 text-slate-500">
+                                電話
+                              </dt>
+                              <dd className="font-mono text-slate-800">
+                                {h.phone}
+                              </dd>
+                            </div>
+                          )}
+                          <div className="flex gap-2">
+                            <dt className="w-16 shrink-0 text-slate-500">
+                              受付時間
+                            </dt>
+                            <dd>{h.hours}</dd>
+                          </div>
+                          <div className="flex gap-2">
+                            <dt className="w-16 shrink-0 text-slate-500">
+                              対象
+                            </dt>
+                            <dd>{h.target}</dd>
+                          </div>
+                          <div className="flex gap-2">
+                            <dt className="w-16 shrink-0 text-slate-500">
+                              方法
+                            </dt>
+                            <dd>{h.methods.join(" / ")}</dd>
+                          </div>
+                        </dl>
+
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {h.phone && (
+                            <a
+                              // ✅ ここもバッククォート必須
+                              href={`tel:${h.phone.replace(/-/g, "")}`}
+                              className="inline-flex items-center rounded-full bg-emerald-600 px-3 py-1.5 text-[11px] font-medium text-white hover:bg-emerald-700"
+                            >
+                              この番号に電話してみる
+                            </a>
+                          )}
+                          {h.url && (
+                            <a
+                              href={h.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center rounded-full border border-slate-300 bg-white/80 px-3 py-1.5 text-[11px] text-slate-700 hover:bg-slate-50"
+                            >
+                              公式サイトを開く
+                            </a>
+                          )}
+                        </div>
+                      </article>
+                    ))}
+
+                    {topResults.length === 0 && (
+                      <p className="text-[11px] text-slate-500">
+                        条件に合いそうな窓口がうまく選べませんでした。
+                        それでも、下の「すべての相談窓口を見る」から
+                        気になるところを選んで相談しても大丈夫です。
+                      </p>
+                    )}
+                  </div>
+                </section>
+
+                {/* すべて表示 */}
+                <section className="mt-4 space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowAll((v) => !v)}
+                    className="text-[11px] text-sky-700 underline underline-offset-2 hover:text-sky-900"
+                  >
+                    {showAll
+                      ? "すべての相談窓口一覧を閉じる"
+                      : "登録されている相談窓口をすべて見る"}
+                  </button>
+
+                  {showAll && (
+                    <div className="mt-2 space-y-3">
+                      {(results || []).map((h) => (
+                        <article
+                          // ✅ ここもテンプレ文字列
+                          key={`all-${h.id}`}
+                          className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm"
+                        >
+                          <div className="flex flex-wrap items-baseline justify-between gap-2">
+                            <h3 className="text-sm font-semibold text-slate-900">
+                              {h.name}
+                            </h3>
+                            <div className="flex flex-wrap gap-1">
+                              {h.tags.map((t) => (
+                                <span
+                                  key={t}
+                                  className="rounded-full bg-slate-100 px-2 py-[2px] text-[10px] text-slate-600"
+                                >
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          <p className="mt-2 text-xs text-slate-700">
+                            {h.description}
+                          </p>
+
+                          <dl className="mt-3 space-y-1 text-[11px] text-slate-600">
+                            {h.phone && (
+                              <div className="flex gap-2">
+                                <dt className="w-16 shrink-0 text-slate-500">
+                                  電話
+                                </dt>
+                                <dd className="font-mono text-slate-800">
+                                  {h.phone}
+                                </dd>
+                              </div>
+                            )}
+                            <div className="flex gap-2">
+                              <dt className="w-16 shrink-0 text-slate-500">
+                                受付時間
+                              </dt>
+                              <dd>{h.hours}</dd>
+                            </div>
+                            <div className="flex gap-2">
+                              <dt className="w-16 shrink-0 text-slate-500">
+                                対象
+                              </dt>
+                              <dd>{h.target}</dd>
+                            </div>
+                            <div className="flex gap-2">
+                              <dt className="w-16 shrink-0 text-slate-500">
+                                方法
+                              </dt>
+                              <dd>{h.methods.join(" / ")}</dd>
+                            </div>
+                          </dl>
+
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {h.phone && (
+                              <a
+                                href={`tel:${h.phone.replace(/-/g, "")}`}
+                                className="inline-flex items-center rounded-full bg-emerald-600 px-3 py-1.5 text-[11px] font-medium text-white hover:bg-emerald-700"
+                              >
+                                この番号に電話してみる
+                              </a>
+                            )}
+                            {h.url && (
+                              <a
+                                href={h.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center rounded-full border border-slate-300 bg-white/80 px-3 py-1.5 text-[11px] text-slate-700 hover:bg-slate-50"
+                              >
+                                公式サイトを開く
+                              </a>
+                            )}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
+
+            {!hasSearched && (
+              <p className="text-[11px] text-slate-500">
+                入力欄にいまの状況を書いて「相談先の候補を表示する」を押すと、
+                ここに相談窓口の候補が表示されます。
+              </p>
+            )}
+          </div>
+        </section>
       </div>
     </main>
   );
 }
 
+/* -------------------------
+   外側（Suspenseで包む）
+-------------------------- */
 export default function SupportClient() {
   return (
     <Suspense fallback={<div>読み込み中…</div>}>
