@@ -186,6 +186,29 @@ export default function CheckPage() {
                   <p className="mt-3 text-[11px] text-emerald-900/80">
                     ※ 自己チェック用の簡易的な指標です。点数が低くてもつらさが強いと感じれば相談してよいし、点数が高い＝あなたが悪いという意味では決してありません。
                   </p>
+                      <div className="mt-4 grid gap-2">
+      <Link
+        href="/support"
+        className="w-full rounded-xl bg-slate-900 px-4 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+      >
+        相談窓口を探す →
+      </Link>
+
+      <Link
+        href="/breathe"
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2 text-center text-sm font-semibold text-slate-800 hover:bg-slate-50"
+      >
+        まずは深呼吸 →
+      </Link>
+
+      <Link
+        href="/form"
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2 text-center text-sm font-semibold text-slate-800 hover:bg-slate-50"
+      >
+        相談メモを作る →
+      </Link>
+    </div>
+
                 </>
               ) : (
                 <>
