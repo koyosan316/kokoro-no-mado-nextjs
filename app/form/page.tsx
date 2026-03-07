@@ -195,16 +195,22 @@ export default function FormPage() {
           </div>
 
           {/* 結果表示 */}
-          {resultText && (
-            <div className="rounded-[2.5rem] bg-emerald-50 p-8 border-2 border-emerald-100 space-y-4">
-              <div className="bg-white/80 rounded-2xl p-6 text-xs leading-relaxed text-slate-700 font-bold whitespace-pre-wrap shadow-inner">
-                {resultText}
-              </div>
-              <button onClick={() => router.push(`/support?text=${encodeURIComponent(resultText)}`)} className="w-full rounded-2xl bg-emerald-600 py-4 text-white font-black hover:bg-emerald-700">
-                この内容で相談窓口をさがす
-              </button>
-            </div>
-          )}
+{resultText && (
+  <div className="rounded-[2.5rem] bg-emerald-50 p-8 border-2 border-emerald-100 space-y-4">
+    <div className="bg-white/80 rounded-2xl p-6 text-xs leading-relaxed text-slate-700 font-bold whitespace-pre-wrap shadow-inner">
+      {resultText}
+    </div>
+<button
+  onClick={() => {
+    sessionStorage.setItem("supportDraft", resultText);
+    router.push("/support");
+  }}
+  className="w-full rounded-2xl bg-emerald-600 py-4 text-white font-black hover:bg-emerald-700"
+>
+  この内容で相談窓口をさがす
+</button>
+  </div>
+)}
         </section>
       </div>
     </main>

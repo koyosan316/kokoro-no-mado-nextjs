@@ -1,8 +1,7 @@
 "use client";
 
-import { Suspense, useState, useMemo } from "react";
+import { Suspense, useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 // --- 型定義・データ・ロジック（ここから下は内容は一切変えていません） ---
 
@@ -76,9 +75,12 @@ function scoreHotlines(input: string): { results: ScoredHotline[]; hasEmergencyS
 // --- 画面パーツ ---
 
 function SupportSearchInner() {
-  const searchParams = useSearchParams();
-  const initial = searchParams.get("text") ?? "";
-  const [text, setText] = useState(initial);
+ const [text, setText] = useState("");
+
+useEffect(() => {
+  const saved = sessionStorage.getItem("supportDraft") ?? "";
+  if (saved) setText(saved);
+}, []);
   const [results, setResults] = useState<ScoredHotline[] | null>(null);
   const [hasEmergencySignal, setHasEmergencySignal] = useState(false);
   const [showAll, setShowAll] = useState(false);
@@ -140,37 +142,64 @@ function SupportSearchInner() {
 
         {/* 入力エリア */}
         <section className="mb-12">
-          <div className={`relative overflow-hidden rounded-[2rem] border-2 bg-white p-6 shadow-xl shadow-slate-200/50 transition-all duration-300 ${safetyCheck ? 'border-rose-400 ring-4 ring-rose-100' : 'border-slate-100'}`}>
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              rows={4}
-              className="w-full resize-none border-none bg-transparent p-2 text-sm font-bold text-slate-700 outline-none placeholder:text-slate-300"
-              placeholder="ここにいまの状況を書いてください（例：学校に行くのがこわい、SNSで悪口を書かれた...）"
-            />
+  <div
+    className={`relative overflow-hidden rounded-[2rem] border-2 bg-white p-6 shadow-xl shadow-slate-200/50 transition-all duration-300 ${
+      safetyCheck ? "border-rose-400 ring-4 ring-rose-100" : "border-slate-100"
+    }`}
+  >
+    <textarea
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      rows={4}
+      className="w-full resize-none border-none bg-transparent p-2 text-sm font-bold text-slate-700 outline-none placeholder:text-slate-300"
+      placeholder="ここにいまの状況を書いてください（例：学校に行くのがこわい、SNSで悪口を書かれた...）"
+    />
 
-            {safetyCheck && (
-              <div className="mt-4 flex items-start gap-3 rounded-2xl bg-rose-50 p-4 text-xs font-black text-rose-600 animate-in slide-in-from-top-2">
-                <span>{safetyCheck.msg}</span>
-              </div>
-            )}
+    {safetyCheck && (
+      <div className="mt-4 flex items-start gap-3 rounded-2xl bg-rose-50 p-4 text-xs font-black text-rose-600 animate-in slide-in-from-top-2">
+        <span>{safetyCheck.msg}</span>
+      </div>
+    )}
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-50 pt-6">
-              <button
-                onClick={handleAnalyze}
-                disabled={!text.trim() || !!safetyCheck}
-                className="rounded-full bg-slate-900 px-8 py-3 text-xs font-black text-white shadow-lg transition-all hover:bg-black hover:scale-105 active:scale-95 disabled:opacity-20 disabled:hover:scale-100"
-              >
-                相談先の候補を表示する
-              </button>
-              
-              <Link href="/form" className="text-[11px] font-bold text-slate-400 underline underline-offset-4 hover:text-violet-600">
-                言葉が出てこない時は「悩みを整理するページ」へ
-              </Link>
-            </div>
-          </div>
-        </section>
+    <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-50 pt-6">
+      <button
+        onClick={handleAnalyze}
+        disabled={!text.trim() || !!safetyCheck}
+        className="rounded-full bg-slate-900 px-8 py-3 text-xs font-black text-white shadow-lg transition-all hover:bg-black hover:scale-105 active:scale-95 disabled:opacity-20 disabled:hover:scale-100"
+      >
+        相談先の候補を表示する
+      </button>
 
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            sessionStorage.removeItem("supportDraft");
+            setText("");
+            setResults(null);
+            setHasSearched(false);
+            setHasEmergencySignal(false);
+          }}
+          className="rounded-full border border-slate-200 bg-white px-5 py-2 text-[11px] font-black text-slate-500 hover:bg-slate-50"
+        >
+          入力をクリア
+        </button>
+
+        <Link
+          href="/form"
+          className="text-[11px] font-bold text-slate-400 underline underline-offset-4 hover:text-violet-600"
+        >
+          言葉が出てこない時は「悩みを整理するページ」へ
+        </Link>
+      </div>
+    </div>
+  </div>
+  <div className="mt-4 rounded-2xl border border-slate-200 bg-white/60 px-4 py-3">
+      <p className="text-[11px] font-bold text-slate-500 leading-relaxed">
+        ※ 受付時間・番号・対応方法は変更される場合があります。最新情報は各窓口の公式サイトでご確認ください。
+      </p>
+    </div>
+</section>
         {/* 結果表示 */}
         {hasSearched && results && (
           <div className="space-y-8 fade-in">
