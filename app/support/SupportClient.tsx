@@ -123,7 +123,7 @@ useEffect(() => {
         <header className="flex items-center justify-between mb-10">
           <Link href="/" className="group flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors">
             <span className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 bg-white group-hover:border-slate-400">←</span>
-            ホームにもどる
+            もどる
           </Link>
           <span className="text-[10px] font-black text-slate-300 tracking-[0.2em] uppercase">Counseling Guide</span>
         </header>

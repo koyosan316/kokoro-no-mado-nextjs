@@ -12,7 +12,7 @@ export default function LearnPage() {
       <nav className="border-b border-slate-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="mx-auto max-w-4xl px-6 py-4 flex justify-between items-center">
           <Link href="/" className="text-xs font-bold text-slate-400 hover:text-sky-600 transition-colors">
-            ← HOME / TOP
+            ← もどる
           </Link>
           <div className="text-[10px] font-bold tracking-widest text-slate-300 uppercase italic">Detailed Knowledge Archive</div>
         </div>
@@ -109,7 +109,7 @@ export default function LearnPage() {
                 <h4 className="font-bold text-slate-800 border-b pb-2">LGBTQとは？</h4>
                 <p>
                   性的マイノリティ（性的少数者）を表す言葉の頭文字です。
-                  心の性、好きになる性、表現する性は人それぞれであり、特定の枠に無理に当てはめる必要はありません。 [cite: 38, 39]
+                  心の性、好きになる性、表現する性は人それぞれであり、特定の枠に無理に当てはめる必要はありません
                 </p>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[12px]">
                   <li className="bg-slate-50 p-3 rounded-lg"><b>L（レズビアン）</b>：女性を好きになる女性</li>
@@ -122,7 +122,7 @@ export default function LearnPage() {
               <div className="p-4 bg-red-50 rounded-xl border border-red-100">
                 <h4 className="font-bold text-red-700 text-xs mb-2">⚠ アウティングの禁止</h4>
                 <p className="text-[11px] text-slate-600">
-                  本人の許可なく、性的指向や性自認を第三者に言いふらす行為は「アウティング」と呼ばれ、重大な人権侵害です。 [cite: 55]
+                  本人の許可なく、性的指向や性自認を第三者に言いふらす行為は「アウティング」と呼ばれ、重大な人権侵害です。 
                 </p>
               </div>
             </div>
@@ -138,15 +138,15 @@ export default function LearnPage() {
               <div className="space-y-4">
                 <h4 className="font-bold text-slate-800">心理的虐待と面前DV</h4>
                 <p>
-                  言葉による否定、無視、存在を認めない態度は心に深い傷を残します。 [cite: 43, 44]
-                  また、親が精神的に不安定（うつ・依存症等）で、子が常に顔色を伺い感情を押し殺す環境や、子供の前で家族に暴力を振るう「面前DV」も重大な心理的虐待です。 [cite: 101, 102]
+                  言葉による否定、無視、存在を認めない態度は心に深い傷を残します。 
+                  また、親が精神的に不安定（うつ・依存症等）で、子が常に顔色を伺い感情を押し殺す環境や、子供の前で家族に暴力を振るう「面前DV」も重大な心理的虐待です。
                 </p>
               </div>
               <div className="space-y-4 border-t border-slate-50 pt-8">
                 <h4 className="font-bold text-slate-800">ネグレクトと生活環境</h4>
                 <p>
-                  食事を与えない、病気でも病院に連れて行かない、家を著しく不潔にする、学校に行かせないなどの行為です。 [cite: 47, 48]
-                  「家のことを外に言うな」という強い圧力がある家庭でも、あなたの安全は最優先されるべきものです。 [cite: 116]
+                  食事を与えない、病気でも病院に連れて行かない、家を著しく不潔にする、学校に行かせないなどの行為です。 
+                  「家のことを外に言うな」という強い圧力がある家庭でも、あなたの安全は最優先されるべきものです。 
                 </p>
               </div>
             </div>
@@ -159,18 +159,18 @@ export default function LearnPage() {
               ヤングケアラー：背負わされている役割
             </h2>
             <div className="p-10 bg-white border border-slate-200 rounded-3xl space-y-8 text-sm text-slate-600 leading-relaxed">
-              <p>本来大人が担うべき家事、介護、家族の世話を、日常的に担っている状態です。 [cite: 46, 98]</p>
+              <p>本来大人が担うべき家事、介護、家族の世話を、日常的に担っている状態です。</p>
               <div className="grid gap-6 md:grid-cols-2">
                 <div className="space-y-4 p-6 bg-sky-50 rounded-2xl">
                   <h5 className="font-bold text-sky-900 text-xs">● 具体的な生活負担</h5>
                   <ul className="text-[11px] text-sky-800 space-y-2 list-disc ml-4">
-                    <li>障がいや病気のある家族の介助。 [cite: 47, 99]</li>
-                    <li>毎日の買い物・洗濯・掃除・料理。 [cite: 47, 99]</li>
-                    <li>幼いきょうだいの世話（送迎・食事・入浴）。 [cite: 47, 108]</li>
+                    <li>障がいや病気のある家族の介助。</li>
+                    <li>毎日の買い物・洗濯・掃除・料理。 </li>
+                    <li>幼いきょうだいの世話（送迎・食事・入浴）。 </li>
                   </ul>
                 </div>
                 <div className="p-6 bg-slate-50 rounded-2xl text-[11px]">
-                  自分の予定が後回しになり、勉強や睡眠、友人と過ごす時間が奪われているなら、それは社会的な支援が必要です。 [cite: 48, 109, 110]
+                  自分の予定が後回しになり、勉強や睡眠、友人と過ごす時間が奪われているなら、それは社会的な支援が必要です。 
                 </div>
               </div>
             </div>
@@ -186,13 +186,13 @@ export default function LearnPage() {
               <div className="space-y-4">
                 <h4 className="font-bold text-slate-800">HSP（刺激に非常に敏感な気質）</h4>
                 <p>
-                  強い光、大きな音、人混み、他人の機嫌の変化に非常に敏感なタイプ。病気ではなく「生まれ持った気質」です。 [cite: 38, 39, 40]
+                  強い光、大きな音、人混み、他人の機嫌の変化に非常に敏感なタイプ。病気ではなく「生まれ持った気質」です。
                 </p>
               </div>
               <div className="space-y-4 border-t border-slate-50 pt-8">
                 <h4 className="font-bold text-slate-800">合理的配慮（法的義務）</h4>
                 <p>
-                  障害や特性がある人が、周囲と同じように活動できるよう、学校や周囲が工夫（指示の文書化、音の調整など）を行うことです。これは不平等を解消するための法的義務です。 [cite: 51, 132]
+                  障害や特性がある人が、周囲と同じように活動できるよう、学校や周囲が工夫（指示の文書化、音の調整など）を行うことです。これは不平等を解消するための法的義務です。
                 </p>
               </div>
             </div>

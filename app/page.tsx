@@ -109,33 +109,45 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* サブメニュー（Utility Tools） */}
-        <section className="space-y-10">
-          <h4 className="text-[12px] font-bold text-slate-300 tracking-[0.5em] uppercase text-center flex items-center justify-center gap-6">
-            <div className="h-px w-8 bg-slate-100" />
-            Utility Tools
-            <div className="h-px w-8 bg-slate-100" />
-          </h4>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {[
-              { title: "今すぐ落ち着く", desc: "深呼吸ガイド", href: "/breathe" },
-              { title: "相談メモを作る", desc: "状況を整理する", href: "/form" },
-              { title: "セルフチェック", desc: "心の反応を確認", href: "/check" },
-              { title: "クイズ", desc: "理解を深める", href: "/quiz" },
-            ].map((item) => (
-              <Link key={item.title} href={item.href} className="group flex items-center justify-between p-8 rounded-[2rem] bg-white/60 hover:bg-white border border-transparent hover:border-slate-100 transition-all shadow-sm">
-                <div className="flex items-center gap-8">
-                  <div className="h-2 w-2 rounded-full bg-slate-200 group-hover:bg-slate-800 transition-colors" />
-                  <div>
-                    <p className="text-lg font-bold text-slate-700 group-hover:text-slate-900">{item.title}</p>
-                    <p className="text-sm text-slate-400 mt-1 font-medium">{item.desc}</p>
-                  </div>
-                </div>
-                <span className="text-2xl text-slate-200 group-hover:text-slate-800 transition-colors pr-2">❯</span>
-              </Link>
-            ))}
+       {/* サブメニュー（Utility Tools） */}
+<section className="space-y-10">
+  <h4 className="text-[12px] font-bold text-slate-300 tracking-[0.5em] uppercase text-center flex items-center justify-center gap-6">
+    <div className="h-px w-8 bg-slate-100" />
+    Utility Tools
+    <div className="h-px w-8 bg-slate-100" />
+  </h4>
+
+  <div className="grid gap-6 sm:grid-cols-2">
+    {[
+      { title: "今すぐ落ち着く", desc: "深呼吸ガイド", href: "/breathe" },
+      { title: "相談メモを作る", desc: "状況を整理する", href: "/form" },
+      { title: "セルフチェック", desc: "心の反応を確認", href: "/check" },
+      { title: "クイズ", desc: "理解を深める", href: "/quiz" },
+      { title: "スキャン", desc: "次の行動を考える", href: "/scan" },
+    ].map((item) => (
+      <Link
+        key={item.title}
+        href={item.href}
+        className="group flex items-center justify-between p-8 rounded-[2rem] bg-white/60 hover:bg-white border border-transparent hover:border-slate-100 transition-all shadow-sm"
+      >
+        <div className="flex items-center gap-8">
+          <div className="h-2 w-2 rounded-full bg-slate-200 group-hover:bg-slate-800 transition-colors" />
+          <div>
+            <p className="text-lg font-bold text-slate-700 group-hover:text-slate-900">
+              {item.title}
+            </p>
+            <p className="text-sm text-slate-400 mt-1 font-medium">
+              {item.desc}
+            </p>
           </div>
-        </section>
+        </div>
+        <span className="text-2xl text-slate-200 group-hover:text-slate-800 transition-colors pr-2">
+          ❯
+        </span>
+      </Link>
+    ))}
+  </div>
+</section>
 
         {/* 外部相談窓口 */}
         <section className="space-y-10">
