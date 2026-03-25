@@ -115,7 +115,7 @@ const QuizMode = () => {
             onClick={() => router.push('/')}
             className="flex items-center text-gray-400 hover:text-gray-800 transition-colors font-bold text-sm"
           >
-            ← ホームに戻る
+            ← 戻る
           </button>
         </div>
 

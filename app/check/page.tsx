@@ -107,7 +107,7 @@ export default function CheckPage() {
             onClick={() => router.push('/')}
             className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50"
           >
-            ← ホームにもどる
+            ← もどる
           </button>
           <p className="text-xs text-slate-400 font-bold">セルフチェック</p>
         </header>

@@ -22,6 +22,9 @@ const notoSansJP = Noto_Sans_JP({
 export const metadata: Metadata = {
   title: "こころのまど",
   description: "こころを落ち着けるためのWebサイト（テスト版）",
+  verification: {
+    google: "ここにGoogle Search Consoleの文字列を入れる",
+  },
 };
 
 export default function RootLayout({
