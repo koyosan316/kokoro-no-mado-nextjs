@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "こころのまど",
   description: "こころを落ち着けるためのWebサイト（テスト版）",
   verification: {
-    google: "ここにGoogle Search Consoleの文字列を入れる",
+    google: "YuW6Z84uAS-PBgM2dhraObMryHY0i0hcQuIena6DIao",
   },
 };
 
