@@ -36,7 +36,7 @@ export const supportResources: SupportResource[] = [
     hours: "毎日 24時間",
     target: "どなたでも",
     methods: ["電話"],
-    tags: ["24時間", "こころ", "生活", "外国語", "無料"],
+    tags: ["24時間", "こころ", "生活", "無料"],
     url: "https://www.since2011.net/yorisoi/",
     emergency: true,
     featured: true,
@@ -156,7 +156,7 @@ export const supportResources: SupportResource[] = [
     id: "one-stop-sexual-violence",
     name: "性犯罪・性暴力被害者のためのワンストップ支援センター",
     description:
-      "性被害や性的な画像被害などについて、医療・相談・警察への付き添いなどの支援につながれます。",
+      "性被害や性的な画像被害などについて、医療、相談、警察への付き添いなどの支援につながれます。",
     phone: "#8891",
     hours: "地域により異なります",
     target: "性被害を受けた本人、周囲の人",
@@ -208,32 +208,41 @@ export const methodOptions = ["すべて", "電話", "チャット", "SNS", "Web
 
 const crisisTerms = [
   "死にたい",
+  "しにたい",
   "消えたい",
+  "きえたい",
   "自殺",
   "自傷",
   "リスカ",
   "飛び降り",
-  "首をつる",
+  "飛びおり",
+  "首をつ",
   "薬を大量",
   "生きていたくない",
+  "生きたくない",
+  "終わりにしたい",
+  "明日が来なければ",
   "もう無理",
   "助けて",
   "殺される",
   "暴力",
   "虐待",
   "性被害",
-  "襲われた",
+  "性暴力",
+  "襲われ",
+  "今すぐ危ない",
 ];
 
 const tagKeywords: Record<string, string[]> = {
-  "24時間": ["今すぐ", "夜", "深夜", "休日", "24時間", "すぐ"],
-  "子ども": ["子ども", "こども", "小学生", "中学生", "高校生", "学校", "いじめ", "親", "先生"],
-  "学校": ["学校", "いじめ", "先生", "クラス", "部活", "友だち", "登校"],
-  "家庭": ["家", "家庭", "親", "夫", "妻", "家族", "怒鳴る", "暴力"],
-  "性被害": ["性", "性的", "痴漢", "画像", "裸", "触られ", "被害"],
-  "ネット": ["ネット", "sns", "line", "x", "インスタ", "dm", "悪口", "晒し"],
-  "こころ": ["つらい", "不安", "眠れない", "消えたい", "疲れた", "しんどい", "孤独"],
-  "地域": ["地域", "近く", "自治体", "病院", "県", "市", "相談先"],
+  "24時間": ["今すぐ", "夜", "深夜", "休日", "24時間", "すぐ", "急ぎ"],
+  子ども: ["子ども", "こども", "小学生", "中学生", "高校生", "学校", "いじめ", "親", "先生"],
+  学校: ["学校", "いじめ", "先生", "クラス", "部活", "友だち", "友達", "登校", "教室"],
+  家庭: ["家", "家庭", "親", "父", "母", "家族", "怒鳴", "暴力", "虐待"],
+  性被害: ["性", "性的", "痴漢", "画像", "裸", "触られ", "被害", "レイプ"],
+  ネット: ["ネット", "sns", "line", "x", "インスタ", "dm", "悪口", "晒し", "さらし"],
+  こころ: ["つらい", "辛い", "不安", "眠れない", "消えたい", "疲れた", "しんどい", "孤独"],
+  地域: ["地域", "近く", "自治体", "病院", "県", "市", "相談所"],
+  人権: ["差別", "嫌がらせ", "ハラスメント", "人権", "ネット"],
 };
 
 export function hasCrisisSignal(text: string) {
@@ -250,8 +259,8 @@ export function rankSupportResources(query: string, method = "すべて") {
 
       if (resource.emergency && hasCrisisSignal(query)) score += 12;
       if (method !== "すべて" && resource.methods.includes(method)) score += 8;
-      if (resource.name.toLowerCase().includes(normalized)) score += 6;
-      if (resource.description.toLowerCase().includes(normalized)) score += 4;
+      if (normalized && resource.name.toLowerCase().includes(normalized)) score += 6;
+      if (normalized && resource.description.toLowerCase().includes(normalized)) score += 4;
 
       resource.tags.forEach((tag) => {
         if (normalized.includes(tag.toLowerCase())) score += 4;

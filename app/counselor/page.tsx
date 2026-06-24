@@ -1,8 +1,9 @@
 import CounselorClient from "./CounselorClient";
 
 export const metadata = {
-  title: "AIカウンセラー | こころのまど",
-  description: "気持ちを整理しながら、必要な相談窓口にもつながれるAI相談ページです。",
+  title: "こころ整理ナビ | こころのまど",
+  description:
+    "外部AIに送らず、ブラウザ内で気持ちの整理と相談窓口探しを手伝う無料の相談ナビです。",
 };
 
 export default function CounselorPage() {

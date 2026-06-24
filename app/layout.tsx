@@ -21,7 +21,7 @@ const notoSansJP = Noto_Sans_JP({
 
 export const metadata: Metadata = {
   title: "こころのまど",
-  description: "こころを落ち着けるためのWebサイト（テスト版）",
+  description: "こころを落ち着けるための無料Webサイトです。",
   verification: {
     google: "YuW6Z84uAS-PBgM2dhraObMryHY0i0hcQuIena6DIao",
   },
@@ -37,7 +37,6 @@ export default function RootLayout({
       <body
         className={`${notoSansJP.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
         style={{
-          // ここが肝：日本語はNoto優先、英数字はGeistが拾われる
           fontFamily:
             "var(--font-noto-sans-jp), var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
         }}
