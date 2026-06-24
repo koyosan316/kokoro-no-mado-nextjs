@@ -1,15 +1,15 @@
 // app/form/page.tsx
 "use client";
 
-import Link from "next/link";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation"; 
 
 export default function FormPage() {
   const router = useRouter();
+  type Role = "被害を受けている（かもしれない）" | "いじめてしまっている（かもしれない）" | "目撃した";
   
   // 各種ステート
-  const [role, setRole] = useState<"被害を受けている（かもしれない）" | "いじめてしまっている（かもしれない）" | "目撃した">("被害を受けている（かもしれない）");
+  const [role, setRole] = useState<Role>("被害を受けている（かもしれない）");
   const [age, setAge] = useState("");
   const [whenStart, setWhenStart] = useState("");
   const [freq, setFreq] = useState("");
@@ -112,8 +112,8 @@ export default function FormPage() {
             <div className="space-y-4">
               <label className="block text-sm font-black text-slate-700">あなたの立場は？</label>
               <div className="grid gap-2">
-                {["被害を受けている（かもしれない）", "いじめてしまっている（かもしれない）", "目撃した"].map((v) => (
-                  <button key={v} onClick={() => setRole(v as any)} className={`rounded-2xl py-3 px-4 text-xs font-bold transition-all border-2 ${role === v ? "bg-slate-900 border-slate-900 text-white" : "bg-slate-50 border-transparent text-slate-400"}`}>{v}</button>
+                {(["被害を受けている（かもしれない）", "いじめてしまっている（かもしれない）", "目撃した"] as Role[]).map((v) => (
+                  <button key={v} onClick={() => setRole(v)} className={`rounded-2xl py-3 px-4 text-xs font-bold transition-all border-2 ${role === v ? "bg-slate-900 border-slate-900 text-white" : "bg-slate-50 border-transparent text-slate-400"}`}>{v}</button>
                 ))}
               </div>
             </div>

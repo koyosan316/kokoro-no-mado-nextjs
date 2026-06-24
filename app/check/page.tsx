@@ -1,7 +1,7 @@
 // app/check/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -33,14 +33,9 @@ export default function CheckPage() {
     "睡眠や食事など生活リズムが乱れている",
   ];
 
-  const [questions, setQuestions] = useState<string[]>([]);
+  const [questions] = useState<string[]>(() => [...initialQuestions].sort(() => Math.random() - 0.5));
   const [answers, setAnswers] = useState<{ [key: string]: number }>({});
   const [showResult, setShowResult] = useState(false);
-
-  useEffect(() => {
-    const shuffled = [...initialQuestions].sort(() => Math.random() - 0.5);
-    setQuestions(shuffled);
-  }, []);
 
   const updateAnswer = (questionText: string, value: number) => {
     setAnswers((prev) => ({ ...prev, [questionText]: value }));

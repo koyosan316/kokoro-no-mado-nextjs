@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 // 元のクイズデータ（ここでのanswerは「options配列の何番目か」を指す）
@@ -50,33 +50,25 @@ const QuizMode = () => {
   const [showResult, setShowResult] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   
-  // シャッフルされたクイズデータを保持するState
-  const [shuffledQuizzes, setShuffledQuizzes] = useState<typeof rawQuizData>([]);
-
   // ジャンル一覧
   const categories = useMemo(() => {
     const set = new Set(rawQuizData.map(q => q.category));
     return Array.from(set);
   }, []);
 
-  // ジャンル選択時：問題と選択肢の両方をシャッフルしてセット
-  useEffect(() => {
-    if (selectedCategory) {
-      const filtered = selectedCategory === "全ジャンル" 
-        ? rawQuizData 
-        : rawQuizData.filter(q => q.category === selectedCategory);
+  // ジャンル選択時：問題と選択肢の両方をシャッフル
+  const shuffledQuizzes = useMemo(() => {
+    if (!selectedCategory) return [];
+    const filtered = selectedCategory === "全ジャンル"
+      ? rawQuizData
+      : rawQuizData.filter(q => q.category === selectedCategory);
 
-      // 1. 問題の順番をシャッフル
-      const shuffledQuestions = shuffleArray(filtered).map(q => {
-        // 2. 各問題の選択肢をシャッフル
-        const correctText = q.options[q.answer]; // 正解の文字列を退避
-        const shuffledOptions = shuffleArray(q.options);
-        const newAnswerIdx = shuffledOptions.indexOf(correctText); // シャッフル後の正解位置を探す
-        return { ...q, options: shuffledOptions, answer: newAnswerIdx };
-      });
-
-      setShuffledQuizzes(shuffledQuestions);
-    }
+    return shuffleArray(filtered).map(q => {
+      const correctText = q.options[q.answer];
+      const shuffledOptions = shuffleArray(q.options);
+      const newAnswerIdx = shuffledOptions.indexOf(correctText);
+      return { ...q, options: shuffledOptions, answer: newAnswerIdx };
+    });
   }, [selectedCategory]);
 
   const handleAnswerClick = (index: number) => {
@@ -102,7 +94,6 @@ const QuizMode = () => {
     setScore(0);
     setShowResult(false);
     setSelectedAnswer(null);
-    setShuffledQuizzes([]);
   };
 
   // --- 1. ジャンル選択画面 ---

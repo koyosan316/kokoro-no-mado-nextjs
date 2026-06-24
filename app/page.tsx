@@ -2,27 +2,25 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return sessionStorage.getItem("hasVisited") !== "true";
+  });
 
   useEffect(() => {
-    // 💡 ブラウザのセッションに「訪問済み」の記録があるか確認
-    const hasVisited = sessionStorage.getItem("hasVisited");
+    if (!isLoading) return;
 
-    if (hasVisited) {
-      // 2回目以降（戻ってきた時）は即表示
+    // 💡 ブラウザのセッションに「訪問済み」の記録があるか確認
+    const randomTime = Math.floor(Math.random() * (2000 - 500 + 1)) + 500;
+    const timer = setTimeout(() => {
+      sessionStorage.setItem("hasVisited", "true"); // 訪問済みを記録
       setIsLoading(false);
-    } else {
-      // 初回訪問時だけ 0.5秒〜2.0秒のランダムな溜めを作る
-      const randomTime = Math.floor(Math.random() * (2000 - 500 + 1)) + 500;
-      const timer = setTimeout(() => {
-        sessionStorage.setItem("hasVisited", "true"); // 訪問済みを記録
-        setIsLoading(false);
-      }, randomTime);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+    }, randomTime);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   // ⏳ 1. 初回のみ表示される読み込み画面
   if (isLoading) {
@@ -78,8 +76,8 @@ export default function Home() {
           <p className="max-w-2xl mx-auto text-slate-600 leading-[2.4] text-lg sm:text-xl font-medium px-4">
             相談していいか分からなくても大丈夫です。<br className="hidden sm:block" />
             まずは自分を守るところから。<br />
-            このサイトは、情報を一切保存しません。<br />
-            入力内容はブラウザを閉じると消去されます。
+            相談メモや検索内容はサイト側で保存しません。<br />
+            AI相談では回答生成のため入力内容がAPIへ送られます。
           </p>
         </div>
 
@@ -93,7 +91,14 @@ export default function Home() {
       <div className="mx-auto max-w-5xl px-6 pb-32 space-y-24">
         
         {/* メインの入り口：2つの大きな扉 */}
-        <div className="grid gap-8 sm:grid-cols-2">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <Link href="/counselor" className="group relative p-10 sm:p-14 rounded-[3rem] bg-white border border-slate-100 shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_50px_rgba(0,0,0,0.06)] transition-all duration-500 overflow-hidden text-left">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-rose-50/70 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-700" />
+            <span className="text-[12px] font-bold text-rose-400 tracking-[0.2em] uppercase italic">00 / Talk</span>
+            <p className="text-3xl font-bold text-slate-800 mt-6 mb-3">AIに相談する</p>
+            <p className="text-base text-slate-400 leading-relaxed font-medium">気持ちを整理し、窓口も探す</p>
+          </Link>
+
           <Link href="/learn" className="group relative p-10 sm:p-14 rounded-[3rem] bg-white border border-slate-100 shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_50px_rgba(0,0,0,0.06)] transition-all duration-500 overflow-hidden text-left">
             <div className="absolute top-0 right-0 w-40 h-40 bg-blue-50/50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-700" />
             <span className="text-[12px] font-bold text-blue-400 tracking-[0.2em] uppercase italic">01 / Understand</span>
@@ -193,6 +198,13 @@ export default function Home() {
     </a>
   </div>
 </section>
+        <Link
+          href="/counselor"
+          className="fixed bottom-5 right-5 z-50 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-4 text-xs font-black text-white shadow-2xl shadow-slate-300/50 transition-all hover:bg-black active:scale-95"
+        >
+          <MessageCircle className="h-4 w-4" />
+          AI相談
+        </Link>
         {/* --- フッター --- */}
         <footer className="pt-24 border-t border-slate-200">
           <div className="grid gap-12 sm:grid-cols-2 mb-20">
