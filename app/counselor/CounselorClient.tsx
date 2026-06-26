@@ -91,45 +91,6 @@ const quickPrompts = [
   "どこに相談すればいいかわかりません",
 ];
 
-const responseOpenings = [
-  "書いてくれてありがとうございます。",
-  "言葉にしてくれたこと、大事に受け取りました。",
-  "ここに置いてくれてありがとうございます。",
-  "短い言葉でも、今のつらさはちゃんと伝わっています。",
-  "話しにくいことかもしれないのに、教えてくれてありがとうございます。",
-  "急がずに書いてくれて大丈夫です。",
-  "今のことを伝えてくれて、ありがとうございます。",
-  "ひとつずつ見ていきましょう。",
-  "ここまで抱えてきたことを、少し言葉にできましたね。",
-  "今の気持ちをそのまま置いてくれて大丈夫です。",
-];
-
-const paceLines = [
-  "今すぐ答えを決めなくても大丈夫です。",
-  "うまく説明しようとしなくて大丈夫です。",
-  "気持ちが揺れていても、そのままで大丈夫です。",
-  "全部を一度に話さなくて大丈夫です。",
-  "今は、ひとつだけ確かめられれば十分です。",
-  "はっきりしない部分があっても大丈夫です。",
-  "少しずつ近いところを探していきましょう。",
-  "言葉が途中で止まっても、無理に続けなくて大丈夫です。",
-  "今の自分にできる範囲だけでかまいません。",
-  "ここでは、きれいにまとめなくて大丈夫です。",
-];
-
-const closingLines = [
-  "下の中から、いちばん近いものを選んでみますか？",
-  "今の感覚に近いものがあれば、ひとつだけ押してみてください。",
-  "答えにくければ、別のことを選んでも大丈夫です。",
-  "迷ったら、いちばん負担が少ない選択で大丈夫です。",
-  "どれも違うと感じたら、そのまま自由に書いてください。",
-  "今のあなたに近いところから、ゆっくりで大丈夫です。",
-  "選びたくないときは、何も選ばずに書いても大丈夫です。",
-  "少しでも近い言葉があれば、それで十分です。",
-  "話の順番は、今の気持ちに合わせて変えて大丈夫です。",
-  "この先も、答えられるところだけでかまいません。",
-];
-
 const concernProfiles: ConcernProfile[] = [
   {
     key: "bullying",
@@ -365,20 +326,241 @@ function contextHint(text: string) {
   return "今は、つらさに名前をつけきれなくても大丈夫です。";
 }
 
-function reflectionVariants(profile: ConcernProfile) {
-  return [
-    profile.replyFocus,
-    profile.label + "のことが続くと、気持ちが休まりにくくなることがあります。",
-    "今の言葉からは、" + profile.label + "の負担をひとりで抱えてきた感じがあります。",
-    profile.label + "の話は、軽く扱わなくて大丈夫なことです。",
-    "ここまでしんどくなるまで、たくさん我慢してきたのかもしれません。",
-    "理由を一つに決められなくても、" + profile.label + "に近い部分はありそうです。",
-    "今のつらさは、甘えではなく、助けを借りていいサインかもしれません。",
-    "一番困っているところを、少しずつ見つけていければ十分です。",
-    "今は大きな答えよりも、少し安心できる場所を増やすことが大切そうです。",
-    "話しながら、今の気持ちに合う進み方を選んでいきましょう。",
-  ];
-}
+type ReplyContext = {
+  profile: ConcernProfile;
+  recent: string;
+  hint: string;
+  steps: string;
+};
+
+const firstReplyVariants: Array<(context: ReplyContext) => string> = [
+  (context) =>
+    "「" + context.recent + "」と書いてくれたんですね。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    context.hint +
+    "\n\n" +
+    context.profile.followUp,
+  (context) =>
+    "今の「" + context.recent + "」という言葉から、かなり気を張ってきた様子が伝わってきます。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    "細かく説明しなくても大丈夫です。 " +
+    context.profile.followUp,
+  (context) =>
+    "教えてくれてありがとうございます。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    context.hint +
+    "\n\n" +
+    "今いちばん近いものを、下から一つ選んでみてください。",
+  (context) =>
+    "「" + context.recent + "」と感じながら過ごすのは、しんどいことだと思います。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    "今は結論を出さなくて大丈夫です。 " +
+    context.profile.followUp,
+  (context) =>
+    "まず、今つらいと感じていることを大事にしていいです。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    context.hint +
+    "\n\n" +
+    "次に近いものを選ぶだけでも、少し整理しやすくなります。",
+  (context) =>
+    "ここに言葉を置いてくれてありがとうございます。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    "話せる範囲だけで大丈夫です。 " +
+    context.profile.followUp,
+  (context) =>
+    "「" + context.recent + "」ということですね。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    context.hint +
+    "\n\n" +
+    "下の選択肢は、正確に当てはまらなくてもかまいません。",
+  (context) =>
+    "今のことを伝えてくれてありがとうございます。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    "ひとつずつ見ていければ十分です。 " +
+    context.profile.followUp,
+  (context) =>
+    "理由をうまく説明できなくても、つらさがあることは変わりません。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    context.hint +
+    "\n\n" +
+    "今の感覚に近いものから、ゆっくり選んでください。",
+  (context) =>
+    "「" + context.recent + "」と書いてくれた部分を、いったん大事に置いておきます。\n\n" +
+    context.profile.replyFocus +
+    "\n\n" +
+    "答えたくないところは飛ばして大丈夫です。 " +
+    context.profile.followUp,
+];
+
+const secondReplyVariants: Array<(context: ReplyContext) => string> = [
+  (context) =>
+    "ここまで入力された言葉から、" + context.profile.label + "の負担が続いているように見えます。\n\n" +
+    "今すぐできそうなことを、二つだけ置いてみます。\n" +
+    context.steps +
+    "\n\n" +
+    "次に、今の自分に近い進み方を一つ選んでください。",
+  (context) =>
+    "「" + context.recent + "」というところが、今は特に苦しい部分なのかもしれません。\n\n" +
+    "少しでも負担を減らすために、できそうなことはこのあたりです。\n" +
+    context.steps +
+    "\n\n" +
+    "無理のない進み方を、下から選んでみてください。",
+  (context) =>
+    "ここまで話してくれたことを急いで片づけなくて大丈夫です。\n\n" +
+    "まずは、今日か明日にできそうなことを考えてみます。\n" +
+    context.steps +
+    "\n\n" +
+    "次にどうしたいか、近いものを選んでください。",
+  (context) =>
+    "今のつらさをひとりで抱え続けなくて大丈夫です。\n\n" +
+    "大きく変えようとせず、小さなことから始めるならこちらです。\n" +
+    context.steps +
+    "\n\n" +
+    "気持ちを整理するか、相談先を見るか、休むかを選べます。",
+  (context) =>
+    "ここまでの流れを見ると、今は安心できる場所や人を増やすことが大切そうです。\n\n" +
+    "そのためにできることを二つ挙げます。\n" +
+    context.steps +
+    "\n\n" +
+    "今の自分に一番近い選択を押してください。",
+  (context) =>
+    "つらさの理由が一つではなくても大丈夫です。\n\n" +
+    "今の段階で試しやすいことは、このあたりです。\n" +
+    context.steps +
+    "\n\n" +
+    "ここから先は、話を続ける・相談先を見る・休む、のどれでも大丈夫です。",
+  (context) =>
+    "「" + context.recent + "」と感じている今は、無理にがんばり方を増やさなくていいです。\n\n" +
+    "少し負担を減らすなら、こういう方法があります。\n" +
+    context.steps +
+    "\n\n" +
+    "次にしたいことを、下から選んでください。",
+  (context) =>
+    "ひとつずつ言葉にできていますね。\n\n" +
+    "今は、次の二つを頭の片隅に置いておくとよさそうです。\n" +
+    context.steps +
+    "\n\n" +
+    "急がなくて大丈夫です。近い進み方を一つ選んでください。",
+  (context) =>
+    "今の話に合いそうな小さな一歩を考えてみます。\n\n" +
+    context.steps +
+    "\n\n" +
+    "どれも今すぐできなくても大丈夫です。次に何をしたいかだけ、選んでみてください。",
+  (context) =>
+    "ここまで頑張ってきた自分を責めなくて大丈夫です。\n\n" +
+    "少しでも楽になるために、できそうなことを二つ置いてみます。\n" +
+    context.steps +
+    "\n\n" +
+    "今の気持ちに合う進み方を、下から選べます。",
+];
+
+const ongoingReplyVariants: Array<(context: ReplyContext) => string> = [
+  (context) =>
+    "「" + context.recent + "」という今の言葉も大事にして考えます。\n\n" +
+    context.hint +
+    "\n\n" +
+    "今の段階でできそうなことは、このあたりです。\n" +
+    context.steps +
+    "\n\n" +
+    context.profile.followUp,
+  (context) =>
+    "ここまでの話から、" + context.profile.label + "の中でも、今は特に負担が大きい部分がありそうです。\n\n" +
+    "少し楽になるために考えられることは、こちらです。\n" +
+    context.steps +
+    "\n\n" +
+    context.profile.followUp,
+  (context) =>
+    "今の気持ちは、前に書いてくれたこととつながっていそうです。\n\n" +
+    context.hint +
+    "\n\n" +
+    "できそうなことを二つだけ挙げます。\n" +
+    context.steps +
+    "\n\n" +
+    "近いものを一つ選んでください。",
+  (context) =>
+    "話しながら、少しずつ大事なところが見えてきます。\n\n" +
+    "今は次のことを覚えておくだけでも大丈夫です。\n" +
+    context.steps +
+    "\n\n" +
+    context.profile.followUp,
+  (context) =>
+    "「" + context.recent + "」と感じるほど、今は心に余裕が少ないのかもしれません。\n\n" +
+    context.hint +
+    "\n\n" +
+    "まずは無理のない範囲で、こちらを考えてみてください。\n" +
+    context.steps +
+    "\n\n" +
+    "次に近いものを選んで大丈夫です。",
+  (context) =>
+    "ここまで言葉にできたこと自体が、状況を整理する助けになっています。\n\n" +
+    "今のあなたに合いそうな選択肢は、このあたりです。\n" +
+    context.steps +
+    "\n\n" +
+    context.profile.followUp,
+  (context) =>
+    "つらいときは、答えを一つに決めなくても大丈夫です。\n\n" +
+    context.hint +
+    "\n\n" +
+    "今できそうなことを二つに絞ると、こちらです。\n" +
+    context.steps +
+    "\n\n" +
+    "今の感覚に近いものを選んでください。",
+  (context) =>
+    "今の話からは、少し安心できる逃げ道が必要そうです。\n\n" +
+    "そのために考えられることを、二つ挙げます。\n" +
+    context.steps +
+    "\n\n" +
+    context.profile.followUp,
+  (context) =>
+    "「" + context.recent + "」という部分を、軽く扱わなくて大丈夫です。\n\n" +
+    context.hint +
+    "\n\n" +
+    "今の段階で試しやすいことは、こちらです。\n" +
+    context.steps +
+    "\n\n" +
+    "下から近いものを選ぶか、そのまま書いてください。",
+  (context) =>
+    "ここまでの内容をふまえると、今は自分を守ることを先に考えてよさそうです。\n\n" +
+    "小さく始めるなら、この二つがあります。\n" +
+    context.steps +
+    "\n\n" +
+    context.profile.followUp,
+];
+
+const contactReplyVariants = [
+  "相談先を見てみようと思ったんですね。\n\n右側には、今の話に近い窓口が出ています。電話が負担なら、チャットやSNSの窓口から見ても大丈夫です。\n\n下から、使いやすそうな方法を選んでください。",
+  "誰かにつながる方法を探そうとしていることは、大切な一歩です。\n\n右側の窓口は、今まで入力された内容に合わせて並んでいます。\n\n電話・チャット・情報だけ見る、の中から近いものを選んでください。",
+  "相談先は、全部を説明できるようになってから使うものではありません。\n\n最初は「今つらいです」だけでも大丈夫です。右側の窓口も見ながら、使う方法を選んでみてください。",
+  "今は、ひとりで考え続けるより、外につながる選択肢を持っておくとよさそうです。\n\n右側に相談先を出しています。話し方に合う方法を下から選んでください。",
+  "相談先を探すとき、電話が合わなければチャットを選んで大丈夫です。\n\n右側の窓口は公式サイトへつながります。\n\n今の気分に合う方法を一つ選んでください。",
+  "誰かに相談するか迷っている段階でも、窓口の情報を見るだけで大丈夫です。\n\n右側に今の話題に近い相談先があります。\n\nまずは使いやすそうな方法を選んでみてください。",
+  "相談先を知っておくと、つらさが強くなったときの逃げ道になります。\n\n右側の窓口から、電話やチャットの案内を確認できます。\n\n今の気持ちに近いものを選んでください。",
+  "今すぐ話せなくても、相談先を見ておくことには意味があります。\n\n右側の窓口は、あとから開いても大丈夫です。\n\n電話・チャット・情報だけ見る、のどれが近いですか？",
+  "相談先を選ぶときは、いちばん話しやすそうな方法を優先して大丈夫です。\n\n右側の一覧も見ながら、下から近いものを選んでください。",
+  "つながる先を探してくれてありがとうございます。\n\n右側には、今の話に合わせた窓口を出しています。\n\n無理のない方法を一つ選んでみてください。",
+];
+
+const restReplyVariants = [
+  "今は少し休むことを選んで大丈夫です。\n\n水を飲む、横になる、画面から離れるなど、体を少し休ませてください。\n\nまた話せそうなときに戻ってきて大丈夫です。",
+  "答えを出さない時間も必要です。\n\n今は、できるだけ刺激を減らして、少し呼吸を整えてみてください。\n\nつらさが強くなったら、右側の24時間窓口を使えます。",
+  "ここまで考えたので、今は休んで大丈夫です。\n\n通知を少し切る、温かい飲み物を飲むなど、小さく落ち着けることを優先してください。\n\n話したくなったら、またここから続けられます。",
+  "休みたいと感じるほど、今は疲れがたまっているのかもしれません。\n\nまずは体が少し楽になることを一つだけしてみてください。\n\n相談先の情報は、右側に残しています。",
+  "今は無理に整理を続けなくて大丈夫です。\n\n横になる、目を閉じる、静かな場所へ移るなど、できる範囲で休んでください。\n\nまた必要になったら戻ってきてください。",
+  "少し休む選択は、逃げではありません。\n\n今は自分をこれ以上追い込まないことを優先して大丈夫です。\n\nつらさが急に強くなったら、右側の窓口につながってください。",
+  "頭の中をいったん休ませる時間にして大丈夫です。\n\n今できることは、水分をとる、座る、横になるなど小さなことで十分です。\n\nまた話せそうなときに続けましょう。",
+  "休みたいと思えたことは、自分の疲れに気づけたということでもあります。\n\n今は、安心できる場所で少し力を抜いてください。\n\n相談先を見ておきたいときは右側を開けます。",
+  "今日はここまででも大丈夫です。\n\n今は気持ちを解決しようとせず、体を休ませることを先にしてください。\n\nまた言葉にしたくなったら、いつでも戻れます。",
+  "今は少し離れる時間を作って大丈夫です。\n\n深呼吸を一回するだけでもかまいません。\n\n危険を感じるほどつらくなったら、ひとりで抱えず右側の窓口や近くの人につながってください。",
+];
 
 export default function CounselorClient() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
@@ -414,7 +596,7 @@ export default function CounselorClient() {
     return rankSupportResources(query || "こころ 相談 24時間").slice(0, 4);
   }, [activeConcern.resourceQuery, combinedUserText, hasCrisis]);
 
-  const chooseVariant = (group: string, variants: string[]) => {
+  const chooseVariant = <T,>(group: string, variants: T[]) => {
     const previous = lastVariantRef.current[group];
     const index = randomIndex(variants.length, previous);
 
@@ -443,37 +625,25 @@ export default function CounselorClient() {
       return { content: crisisReply };
     }
 
-    const opening = chooseVariant("opening", responseOpenings);
-    const reflection = chooseVariant("reflection-" + profile.key, reflectionVariants(profile));
-    const pace = chooseVariant("pace", paceLines);
-    const closing = chooseVariant("closing", closingLines);
     const recent = compactText(latestUserMessage);
-    const historyLine =
-      turn > 1
-        ? "さっき書いてくれたことと、今の「" + recent + "」をあわせて考えてみます。"
-        : "今の「" + recent + "」という言葉から、いったん考えてみます。";
+    const context: ReplyContext = {
+      profile,
+      recent,
+      hint: contextHint(userText),
+      steps: chooseSteps(profile.nextSteps),
+    };
+    const latestNormalized = normalizeText(latestUserMessage);
 
-    if (normalizeText(latestUserMessage).includes("相談先") || normalizeText(latestUserMessage).includes("窓口")) {
+    if (latestNormalized.includes("相談先") || latestNormalized.includes("窓口")) {
       return {
-        content: [
-          opening,
-          "相談先を見ようと思えたことは、大切な動きです。",
-          "画面右側には、今の話に近い窓口を出しています。電話が負担なら、チャットやSNSの窓口から見ても大丈夫です。",
-          pace,
-          closing,
-        ].join("\n\n"),
+        content: chooseVariant("contact", contactReplyVariants),
         choices: contactChoices,
       };
     }
 
-    if (normalizeText(latestUserMessage).includes("休み")) {
+    if (latestNormalized.includes("休み")) {
       return {
-        content: [
-          opening,
-          "今は、答えを出すより少し休む選択も大事です。",
-          "水を飲む、横になる、通知を少し切るなど、小さく体を休ませてください。つらさが強くなったら、右側の24時間窓口を使えます。",
-          "また話せそうなときに、ここへ戻ってきて大丈夫です。",
-        ].join("\n\n"),
+        content: chooseVariant("rest", restReplyVariants),
         choices: [
           { id: "rest-water", label: "まず少し落ち着きたい", value: "まず少し落ち着きたいです" },
           { id: "rest-support", label: "相談先を見ておきたい", value: "相談先を見ておきたいです" },
@@ -484,41 +654,20 @@ export default function CounselorClient() {
 
     if (turn === 1) {
       return {
-        content: [
-          opening,
-          reflection,
-          historyLine,
-          contextHint(userText),
-          "今は細かく説明しなくても大丈夫です。次に近いものを選んでみてください。",
-        ].join("\n\n"),
+        content: chooseVariant("first-" + profile.key, firstReplyVariants)(context),
         choices: profile.choices,
       };
     }
 
     if (turn === 2) {
       return {
-        content: [
-          opening,
-          reflection,
-          historyLine,
-          "今できそうな小さな一歩を二つだけ置いてみます。\n" + chooseSteps(profile.nextSteps),
-          profile.followUp,
-          closing,
-        ].join("\n\n"),
+        content: chooseVariant("second-" + profile.key, secondReplyVariants)(context),
         choices: actionChoices,
       };
     }
 
     return {
-      content: [
-        opening,
-        reflection,
-        historyLine,
-        contextHint(userText),
-        "今の段階でできそうなことは、このあたりです。\n" + chooseSteps(profile.nextSteps),
-        pace,
-        closing,
-      ].join("\n\n"),
+      content: chooseVariant("ongoing-" + profile.key, ongoingReplyVariants)(context),
       choices: profile.choices.slice(0, 3).concat([
         { id: "switch-" + turn, label: "別のことを話したい", value: "別のことも話したいです" },
       ]),
@@ -713,7 +862,6 @@ export default function CounselorClient() {
                   onChange={(event) => setInput(event.target.value)}
                   rows={2}
                   className="max-h-32 min-h-14 flex-1 resize-none rounded-lg border border-slate-200 bg-white px-5 py-4 text-sm font-medium text-slate-700 outline-none transition placeholder:text-slate-300 focus:border-blue-200 focus:ring-4 focus:ring-blue-50"
-                  placeholder="選びにくいときは、今の気持ちを少しだけ書いてください"
                 />
                 <button
                   type="submit"
