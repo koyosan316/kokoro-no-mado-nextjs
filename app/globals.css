@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
-/* ライト/ダークテーマ変数 */
 :root {
-  --background: #f7f7f8; /* ← 超薄い水色に変更！ */
+  --background: #fbfaf9;
   --foreground: #171717;
 }
 
@@ -13,20 +12,11 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-/* body を Tailwind ベースに変更（←これが超重要） */
 body {
   @apply bg-slate-50 text-slate-900;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* フェードイン */
 @layer utilities {
   .fade-in {
     opacity: 0;
