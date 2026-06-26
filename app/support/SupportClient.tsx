@@ -58,9 +58,9 @@ export default function SupportClient() {
             </div>
 
             {crisis && (
-              <div className="mt-5 rounded-lg border border-rose-200 bg-rose-50 p-5 text-rose-900">
+              <div className="mt-5 rounded-2xl border border-amber-100 bg-amber-50/70 p-5 text-slate-700">
                 <div className="flex items-start gap-3">
-                  <Heart className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />
+                  <Heart className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
                   <div className="space-y-2">
                     <p className="text-sm font-black">今すぐ人につながることを優先してください</p>
                     <p className="text-xs font-bold leading-relaxed">
@@ -106,8 +106,8 @@ export default function SupportClient() {
           {results.map((resource) => (
             <article
               key={resource.id}
-              className={`rounded-lg border bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl ${
-                resource.emergency ? "border-rose-100" : "border-slate-100"
+              className={`rounded-2xl border bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl ${
+                resource.emergency ? "border-sky-100" : "border-slate-100"
               }`}
             >
               <div className="mb-4 flex items-start justify-between gap-4">
@@ -116,9 +116,9 @@ export default function SupportClient() {
                     {resource.tags.slice(0, 4).map((tag) => (
                       <span
                         key={tag}
-                        className={`rounded-lg px-3 py-1 text-[10px] font-black ${
+                        className={`rounded-full px-3 py-1 text-[10px] font-black ${
                           tag === "緊急" || tag === "24時間"
-                            ? "bg-rose-50 text-rose-500"
+                            ? "bg-sky-50 text-sky-600"
                             : "bg-slate-50 text-slate-400"
                         }`}
                       >

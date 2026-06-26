@@ -790,18 +790,18 @@ export default function CounselorClient() {
             </div>
 
             {hasCrisis && (
-              <div className="mx-5 mt-5 rounded-lg border border-rose-200 bg-rose-50 p-5 text-rose-900 sm:mx-7">
+              <div className="mx-5 mt-5 rounded-2xl border border-amber-100 bg-amber-50/70 p-5 text-slate-700 sm:mx-7">
                 <div className="flex items-start gap-3">
-                  <Heart className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" />
+                  <Heart className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
                   <div className="space-y-3">
                     <p className="text-sm font-black">今は安全を優先してください</p>
                     <p className="text-xs font-bold leading-relaxed">
                       自分や誰かの命・身体に危険があるときは、近くの大人、学校、医療機関、24時間相談窓口へすぐつながってください。
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      <a href="tel:110" className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-black text-white">110 警察</a>
-                      <a href="tel:119" className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-black text-white">119 救急・消防</a>
-                      <a href="tel:189" className="rounded-lg bg-white px-3 py-2 text-xs font-black text-rose-700">189 児童相談所</a>
+                      <a href="tel:110" className="rounded-full border border-amber-200 bg-white px-3 py-2 text-xs font-black text-amber-800">110 警察</a>
+                      <a href="tel:119" className="rounded-full border border-amber-200 bg-white px-3 py-2 text-xs font-black text-amber-800">119 救急・消防</a>
+                      <a href="tel:189" className="rounded-full border border-amber-200 bg-white px-3 py-2 text-xs font-black text-amber-800">189 児童相談所</a>
                     </div>
                   </div>
                 </div>
