@@ -713,7 +713,6 @@ export default function CounselorClient() {
                   onChange={(event) => setInput(event.target.value)}
                   rows={2}
                   className="max-h-32 min-h-14 flex-1 resize-none rounded-lg border border-slate-200 bg-white px-5 py-4 text-sm font-medium text-slate-700 outline-none transition placeholder:text-slate-300 focus:border-blue-200 focus:ring-4 focus:ring-blue-50"
-                  placeholder="選びにくいときは、今の気持ちを少しだけ書いてください"
                 />
                 <button
                   type="submit"
