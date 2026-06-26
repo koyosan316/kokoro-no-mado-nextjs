@@ -103,11 +103,11 @@ export default function Home() {
 
         <section className="border-y border-slate-100 py-10 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:px-6">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-rose-400">Quiet guide</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-teal-400">Quiet guide</p>
             <h2 className="mt-3 text-xl font-bold text-slate-800">少しだけ、気持ちを言葉にしたいとき</h2>
             <p className="mt-2 text-sm font-medium leading-relaxed text-slate-500">ブラウザの中だけで動く、無料のこころ整理ナビです。</p>
           </div>
-          <Link href="/counselor" className="mt-5 inline-flex items-center justify-center rounded-full border border-rose-200 bg-white px-6 py-3 text-sm font-bold text-rose-600 shadow-sm transition hover:bg-rose-50 sm:mt-0">
+          <Link href="/counselor" className="mt-5 inline-flex items-center justify-center rounded-full border border-teal-100 bg-white px-6 py-3 text-sm font-bold text-teal-700 shadow-sm transition hover:bg-teal-50 sm:mt-0">
             こころ整理ナビをひらく
           </Link>
         </section>
