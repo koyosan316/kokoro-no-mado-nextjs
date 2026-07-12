@@ -4,6 +4,64 @@ import { useState } from "react";
 import Link from "next/link";
 import Accordion from "../components/Accordion";
 
+const referenceMaterials = [
+  {
+    organization: "文部科学省",
+    title: "いじめへの対応のヒント",
+    href: "https://www.mext.go.jp/a_menu/shotou/seitoshidou/1302904.htm",
+  },
+  {
+    organization: "文部科学省",
+    title: "24時間子供SOSダイヤル",
+    href: "https://www.mext.go.jp/a_menu/shotou/seitoshidou/06112210.htm",
+  },
+  {
+    organization: "厚生労働省",
+    title: "まもろうよ こころ",
+    href: "https://www.mhlw.go.jp/mamorouyokokoro/",
+  },
+  {
+    organization: "こども家庭庁",
+    title: "ヤングケアラーのこと",
+    href: "https://www.cfa.go.jp/policies/young-carer",
+  },
+  {
+    organization: "こども家庭庁",
+    title: "児童虐待防止対策",
+    href: "https://www.cfa.go.jp/policies/jidougyakutai",
+  },
+  {
+    organization: "政府広報オンライン",
+    title: "児童虐待かも？と思ったら189",
+    href: "https://www.gov-online.go.jp/useful/article/202011/3.html",
+  },
+  {
+    organization: "法務省",
+    title: "性的マイノリティに関する偏見や差別をなくしましょう",
+    href: "https://www.moj.go.jp/JINKEN/jinken04_00126.html",
+  },
+  {
+    organization: "法務省",
+    title: "多様な性への理解と対応ハンドブック",
+    href: "https://www.moj.go.jp/JINKEN/LGBT/index.html",
+  },
+  {
+    organization: "内閣府",
+    title: "合理的配慮の提供が義務化されました",
+    href: "https://www8.cao.go.jp/shougai/suishin/sabekai_leaflet-r05.html",
+  },
+  {
+    organization: "国立精神・神経医療研究センター",
+    title: "こころの情報サイト",
+    href: "https://kokoro.ncnp.go.jp/",
+  },
+  {
+    organization: "厚生労働省",
+    title: "e-ヘルスネット",
+    href: "https://kennet.mhlw.go.jp/information/information",
+  },
+];
+
 export default function LearnPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>("mental");
 
@@ -736,6 +794,40 @@ export default function LearnPage() {
 
         {/* 07. フッター：相談窓口への誘導 */}
         <footer className="mt-48 pt-10 border-t border-slate-100 text-center">
+          <section
+            aria-labelledby="reference-materials-title"
+            className="mb-20 rounded-3xl border border-slate-100 bg-white/45 p-5 text-left sm:p-6"
+          >
+            <div className="mx-auto max-w-3xl">
+              <h2 id="reference-materials-title" className="text-sm font-bold text-slate-500">
+                参考文献
+              </h2>
+              <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                このページの内容は、次の公的機関・専門機関の情報を参考にして整理しています。
+                最新の情報やくわしい内容は、それぞれの公式ページも確認してください。
+              </p>
+
+              <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                {referenceMaterials.map((material) => (
+                  <a
+                    key={`${material.organization}-${material.title}`}
+                    href={material.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group rounded-2xl border border-slate-100 bg-slate-50/50 p-3 transition-all hover:border-sky-100 hover:bg-white"
+                  >
+                    <span className="block text-[10px] font-bold text-slate-400">
+                      {material.organization}
+                    </span>
+                    <span className="mt-1 block text-xs font-bold leading-relaxed text-slate-600 group-hover:text-sky-700">
+                      {material.title}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* href を "/consult" から "/support" に変更 */}
           <Link 
             href="/support" 
