@@ -72,18 +72,17 @@ export default function LearnPage() {
           <Link href="/" className="text-xs font-bold text-slate-400 hover:text-sky-600 transition-colors">
             ← もどる
           </Link>
-          <div className="text-[10px] font-bold tracking-widest text-slate-300 uppercase italic">Detailed Knowledge Archive</div>
+          <div className="text-[10px] font-bold tracking-widest text-slate-300 uppercase italic">Learn</div>
         </div>
       </nav>
 
       <div className="mx-auto max-w-4xl px-6 py-16">
         <header className="mb-24">
           <h1 className="text-2xl font-black tracking-tight text-slate-900 md:text-3xl border-l-4 border-slate-900 pl-6">
-            こころを守る知恵のしおり
+            学ぶ
           </h1>
           <p className="mt-6 text-sm leading-relaxed text-slate-500 max-w-2xl">
-            提供されたすべての知識を、一文字も無駄にせず整理しました。
-            「LGBTQ」の正しい理解から、家庭や学校、法律の知識まで、あなたを守るためのアーカイブです。
+            自分を守るための知識
           </p>
         </header>
 
